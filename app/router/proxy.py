@@ -8,19 +8,19 @@ from app.domain.proxy.service import ProxyService
 
 router = APIRouter(prefix="/proxies", tags=["proxy"])
 
+provide_proxy_service = Provide[AppContainer.proxy_service]
+
 
 @router.get("", description="프록시 목록 조회 API", response_model=ProxiesResponse)
 @inject
-async def proxies(proxy_service: ProxyService = Depends(Provide[AppContainer.proxy_service])) -> dict:
+async def proxies(proxy_service: ProxyService = Depends(provide_proxy_service)) -> dict:
     proxies = await proxy_service.get_proxies()
     return {"proxies": proxies}
 
 
 @router.post("/{proxy}", description="프록시 추가 API", status_code=201)
 @inject
-async def add_proxy(
-    proxy: str, proxy_service: ProxyService = Depends(Provide[AppContainer.proxy_service])
-) -> BaseResponse:
+async def add_proxy(proxy: str, proxy_service: ProxyService = Depends(provide_proxy_service)) -> BaseResponse:
     await proxy_service.add_proxy(proxy)
     return BaseResponse()
 
