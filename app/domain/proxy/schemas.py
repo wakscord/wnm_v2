@@ -2,6 +2,8 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel
 
+from app.common.schemas import BaseResponse
+
 
 @dataclass(frozen=True)
 class ProxyInfo:
@@ -13,5 +15,5 @@ class ProxiesAddRequest(BaseModel):
     proxies: list[str]
 
 
-class ProxiesResponse(BaseModel):
+class ProxiesResponse(BaseResponse):
     proxies: list[ProxyInfo]
