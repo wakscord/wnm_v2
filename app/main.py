@@ -31,7 +31,7 @@ def init_middlewares(nd_app: FastAPI) -> None:
 
 def init_di() -> None:
     container = AppContainer()
-    container.wire(modules=["app.router.proxy"])
+    container.wire(modules=["app.router.proxy", "app.router.node"])
 
 
 def create_app() -> FastAPI:
