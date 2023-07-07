@@ -6,6 +6,8 @@ from app.domain.node.repository import NodeRedisRepository
 from app.domain.node.service import NodeService
 from app.domain.proxy.repository import ProxyRedisRepository
 from app.domain.proxy.service import ProxyService
+from app.domain.task.repository import TaskRedisRepository
+from app.domain.task.service import TaskService
 
 
 class AppContainer(containers.DeclarativeContainer):
@@ -20,3 +22,6 @@ class AppContainer(containers.DeclarativeContainer):
 
     node_repository = providers.Singleton(NodeRedisRepository, session=redis_session)
     node_service = providers.Singleton(NodeService, node_repo=node_repository)
+
+    task_repository = providers.Singleton(TaskRedisRepository, session=redis_session)
+    task_service = providers.Singleton(TaskService, task_repo=task_repository)
