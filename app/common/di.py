@@ -8,19 +8,19 @@ from app.domain.proxy.repository import ProxyRedisRepository
 from app.domain.proxy.service import ProxyService
 from app.domain.task.repository import TaskRedisRepository
 from app.domain.task.service import TaskService
+from app.domain.unsubscriber.repository import UnsubscriberRedisRepository
 
 
 class AppContainer(containers.DeclarativeContainer):
-    redis_session = providers.Singleton(
-        Redis,
-        connection_pool=providers.Singleton(
-            ConnectionPool,
-            host=settings.REDIS_URL,
-            port=settings.REDIS_PORT,
-            password=settings.REDIS_PASSWORD,
-            decode_responses=True,
-        ),
+    redis_connection_pool = providers.Resource(
+        ConnectionPool,
+        host=settings.REDIS_URL,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        decode_responses=True,
     )
+    redis_session = providers.Resource(Redis, connection_pool=redis_connection_pool)
+
     proxy_repository = providers.Singleton(ProxyRedisRepository, session=redis_session)
     proxy_service = providers.Singleton(ProxyService, proxy_repo=proxy_repository)
 
@@ -29,3 +29,5 @@ class AppContainer(containers.DeclarativeContainer):
 
     task_repository = providers.Singleton(TaskRedisRepository, session=redis_session)
     task_service = providers.Singleton(TaskService, task_repo=task_repository)
+
+    unsub_repository = providers.Singleton(UnsubscriberRedisRepository, session=redis_session)

@@ -5,6 +5,7 @@ from app.common.settings import settings
 from app.router.node import router as node_router
 from app.router.proxy import router as proxy_router
 from app.router.task import router as task_router
+from app.router.unsubscriber import router as unsubscriber_router
 
 
 async def verify_token(authorization: str = Header()) -> None:
@@ -17,3 +18,4 @@ router = APIRouter(prefix="/api", dependencies=[Depends(verify_token)])
 router.include_router(proxy_router)
 router.include_router(node_router)
 router.include_router(task_router)
+router.include_router(unsubscriber_router)
