@@ -16,6 +16,7 @@ _settings = dotenv_values(env_path)
 class Settings:
     REDIS_URL: str
     REDIS_PASSWORD: str
+    API_KEY: str
 
 
 settings = from_dict(data_class=Settings, data=_settings)
