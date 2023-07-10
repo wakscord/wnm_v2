@@ -15,6 +15,7 @@ _settings = dotenv_values(env_path)
 @dataclass(frozen=True)
 class Settings:
     REDIS_URL: str
+    REDIS_PORT: str
     REDIS_PASSWORD: str
     API_KEY: str
 
