@@ -8,19 +8,19 @@ from app.common.exceptions import APIException
 from app.router import router
 
 
-def init_exception_handler(nd_app: FastAPI) -> None:
+def init_exception_handler(app: FastAPI) -> None:
     async def custom_exception_handler(_: Request, ex: APIException) -> JSONResponse:
         return JSONResponse(
             status_code=ex.code,
             content={"code": ex.code, "message": ex.message},
         )
 
-    nd_app.add_exception_handler(APIException, custom_exception_handler)
+    app.add_exception_handler(APIException, custom_exception_handler)
 
 
-def init_middlewares(nd_app: FastAPI) -> None:
-    nd_app.add_middleware(ExceptionMiddleware, handlers=nd_app.exception_handlers)
-    nd_app.add_middleware(
+def init_middlewares(app: FastAPI) -> None:
+    app.add_middleware(ExceptionMiddleware, handlers=app.exception_handlers)
+    app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
@@ -39,8 +39,8 @@ def create_app() -> FastAPI:
     app = FastAPI(title="WNM API", docs_url=None, description="Wakscord Node Manager")
     app.include_router(router)
 
-    init_exception_handler(nd_app=app)
-    init_middlewares(nd_app=app)
+    init_exception_handler(app=app)
+    init_middlewares(app=app)
     init_di()
 
     return app
