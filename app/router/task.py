@@ -1,5 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.common.di import AppContainer
 from app.common.exceptions import APIException
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/tasks", tags=["task"])
 provide_task_service = Provide[AppContainer.task_service]
 
 
-@router.post("", description="작업 등록 API", status_code=201)
+@router.post("", description="작업 등록 API", status_code=status.HTTP_201_CREATED)
 @inject
 async def add_task(
     request: TaskAddRequest,
@@ -23,7 +23,7 @@ async def add_task(
 ) -> BaseResponse:
     active_nodes = await node_service.get_active_nodes()
     if not active_nodes:
-        raise APIException(code=409, message="활성화 노드가 존재하지 않습니다.")
+        raise APIException(code=status.HTTP_409_CONFLICT, message="활성화 노드가 존재하지 않습니다.")
 
     await task_service.add_task(request.subscribers, request.message, active_nodes)
     return BaseResponse()
