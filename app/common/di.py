@@ -1,5 +1,5 @@
 from dependency_injector import containers, providers
-from redis.asyncio import ConnectionPool, Redis
+from redis.asyncio import BlockingConnectionPool, Redis
 
 from app.common.settings import settings
 from app.domain.node.repository import NodeRedisRepository
@@ -13,11 +13,13 @@ from app.domain.unsubscriber.repository import UnsubscriberRedisRepository
 
 class AppContainer(containers.DeclarativeContainer):
     redis_connection_pool = providers.Resource(
-        ConnectionPool,
+        BlockingConnectionPool,
         host=settings.REDIS_URL,
         port=settings.REDIS_PORT,
         password=settings.REDIS_PASSWORD,
         decode_responses=True,
+        max_connections=30,
+        timeout=None,
     )
     redis_session = providers.Resource(Redis, connection_pool=redis_connection_pool)
 
