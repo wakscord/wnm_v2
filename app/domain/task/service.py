@@ -12,7 +12,9 @@ class TaskService:
         chunked_subscribers_list = self._chunk_subscribers(subscribers, nodes_len=len(active_nodes))
 
         for active_node, chunked_subscribers in zip(active_nodes, chunked_subscribers_list):
-            task = Task(active_node, subscribers, message)
+            if not chunked_subscribers:
+                continue
+            task = Task(active_node, chunked_subscribers, message)
             await self._task_repo.add_task(task)
 
     @staticmethod

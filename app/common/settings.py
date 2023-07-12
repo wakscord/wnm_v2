@@ -26,4 +26,5 @@ settings = Settings(
     REDIS_URL=raw_settings.get("REDIS_URL") or "localhost",
     REDIS_PORT=to_int(raw_settings.get("REDIS_PORT"), 6379),
     REDIS_PASSWORD=raw_settings.get("REDIS_PASSWORD"),
+    API_KEY=raw_settings.get("API_KEY"),
 )
