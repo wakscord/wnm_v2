@@ -12,7 +12,7 @@ from app.domain.unsubscriber.repository import UnsubscriberRedisRepository
 
 
 class AppContainer(containers.DeclarativeContainer):
-    redis_connection_pool = providers.Resource(
+    redis_connection_pool = providers.Factory(
         BlockingConnectionPool,
         host=settings.REDIS_URL,
         port=settings.REDIS_PORT,
@@ -21,7 +21,7 @@ class AppContainer(containers.DeclarativeContainer):
         max_connections=30,
         timeout=None,
     )
-    redis_session = providers.Resource(Redis, connection_pool=redis_connection_pool)
+    redis_session = providers.Factory(Redis, connection_pool=redis_connection_pool)
 
     proxy_repository = providers.Singleton(ProxyRedisRepository, session=redis_session)
     proxy_service = providers.Singleton(ProxyService, proxy_repo=proxy_repository)
