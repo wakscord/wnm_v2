@@ -31,10 +31,14 @@ class ProxyRedisRepository(ProxyRepository):
         return await self._session.zrange(self._PROXIES_KEY, start=0, end=-1, withscores=True)
 
     async def add_proxy(self, proxy: str) -> None:
-        await self._session.zadd(self._PROXIES_KEY, mapping={proxy: 0})
+        await self._session.zadd(self._PROXIES_KEY, mapping={self._to_http(proxy): 0})
 
     async def add_proxies(self, proxies: list[str]) -> None:
-        await self._session.zadd(self._PROXIES_KEY, mapping={proxy: 0 for proxy in proxies})
+        await self._session.zadd(self._PROXIES_KEY, mapping={self._to_http(proxy): 0 for proxy in proxies})
 
     async def delete_proxy(self, proxy: str) -> None:
-        await self._session.zrem(self._PROXIES_KEY, proxy)
+        await self._session.zrem(self._PROXIES_KEY, self._to_http(proxy))
+
+    @staticmethod
+    def _to_http(proxy_url: str) -> str:
+        return f"http://{proxy_url}"
