@@ -9,7 +9,6 @@ from app.common.schemas import BaseResponse
 
 @dataclass(frozen=True)
 class Task(BaseModel):
-    node_id: str
     subscribers: list[str]
     message: dict
 
