@@ -10,9 +10,6 @@ class NodeRepository(abc.ABC):
     async def get_all_nodes(self) -> list[str]:
         raise NotImplementedError
 
-    async def delete_node(self, node_id: str) -> None:
-        raise NotImplementedError
-
 
 class NodeRedisRepository(NodeRepository):
     _NODE_SERVERS_KEY = "node_servers"
@@ -25,6 +22,3 @@ class NodeRedisRepository(NodeRepository):
 
     async def get_all_nodes(self) -> list[str]:
         return await self._session.hkeys(self._NODE_SERVERS_KEY)
-
-    async def delete_node(self, node_id: str) -> None:
-        await self._session.hdel(self._NODE_SERVERS_KEY, node_id)
